@@ -1,11 +1,11 @@
-import React from 'react';
-import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { AppProps } from 'next/app';
+import type { AppProps } from "next/app";
+import { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppProps<{ session: Session }>) {
   return (
-    <UserProvider>
+    <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
-    </UserProvider>
+    </SessionProvider>
   );
 }
