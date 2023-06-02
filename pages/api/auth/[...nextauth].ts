@@ -17,11 +17,14 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
-        return {
-          accessToken: account.access_token,
-        }
+        token.access_token = account.access_token
       }
       return token
+    },
+
+    async session({ session, token }) {
+      session.user.accessToken = token.access_token
+      return session;
     },
   },
 })
