@@ -1,4 +1,5 @@
 import NextAuth from "next-auth";
+import { JWT } from "next-auth/jwt";
 
 export default NextAuth({
   providers: [
@@ -29,15 +30,17 @@ export default NextAuth({
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
-        token.access_token = account.access_token
-        token.refresh_token = account.refresh_token
+        token.accessToken = account.access_token
+        token.refreshToken = account.refresh_token
+        token.idToken = account.id_token
       }
       return token
     },
 
     async session({ session, token }) {
-      session.user.accessToken = token.access_token
-      session.user.refreshToken = token.refresh_token
+      session.user.accessToken = token.accessToken
+      session.user.refreshToken = token.refreshToken
+      session.user.idToken = token.idToken
       return session;
     },
 
@@ -45,4 +48,12 @@ export default NextAuth({
       return baseUrl
     },
   },
+
+  events: {
+    async signOut({ token }: { token: JWT }) {
+      const logOutUrl = new URL(`${process.env.KEY_CLOAK_BASE_URL}/auth/realms/sample/protocol/openid-connect/logout`)
+      logOutUrl.searchParams.set("id_token_hint", token.idToken!)
+      await fetch(logOutUrl);
+    },
+  }
 })
