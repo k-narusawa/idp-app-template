@@ -30,12 +30,14 @@ export default NextAuth({
     async jwt({ token, account }) {
       if (account) {
         token.access_token = account.access_token
+        token.refresh_token = account.refresh_token
       }
       return token
     },
 
     async session({ session, token }) {
       session.user.accessToken = token.access_token
+      session.user.refreshToken = token.refresh_token
       return session;
     },
 
