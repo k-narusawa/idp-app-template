@@ -8,9 +8,9 @@ export default async function handler(
   const { code } = req.body
 
   try {
-    const response = await axios.post(`${process.env.AUTH0_BASE_URL}/oauth/token`, {
-      client_id: `${process.env.AUTH0_CLIENT_ID}`,
-      client_secret: `${process.env.AUTH0_CLIENT_SECRET}`,
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_AUTH0_BASE_URL}/oauth/token`, {
+      client_id: `${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`,
+      client_secret: `${process.env.NEXT_PUBLIC_AUTH0_CLIENT_SECRET}`,
       redirect_uri: 'http://localhost:3000',
       grant_type: 'authorization_code',
       code

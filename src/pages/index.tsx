@@ -2,15 +2,15 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 
-const AUTH_SERVER = 'https://dev-dlv7dvq105lm8tbo.us.auth0.com'
-const CLIENT_ID = 'ZaeD96PA4RLIXH2jsbAwf3uejCxaT6o6'
-const REDIRECT_URI = 'http://localhost:3000/callback'
-
-const handleLogin = () => {
-  window.location.href = `${AUTH_SERVER}/authorize?response_type=code&scope=openid&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`
-}
-
 const Home: NextPage = () => {
+  const handleLogin = () => {
+    const AUTH_SERVER = process.env.NEXT_PUBLIC_AUTH0_BASE_URL
+    const CLIENT_ID = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID
+    const REDIRECT_URI = 'http://localhost:3000/callback'
+  
+    window.location.href = `${AUTH_SERVER}/authorize?response_type=code&scope=openid&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`
+  }
+  
   return (
     <div className={styles.container}>
       <Head>
