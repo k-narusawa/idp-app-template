@@ -1,30 +1,37 @@
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { GetServerSideProps } from "next"
 
-const CallbackPage = () => {
-  const router = useRouter()
-  const [ loading, setLoading ] = useState(true)
+type Props = {
+  accessToken: string
+}
 
-  useEffect(() => {
-    const code = router.query.code
+const CallbackPage = (props: Props) => {
+  return (
+    <>
+      <h1>Callback</h1>
+      <p>{props.accessToken}</p>
+    </>
+  )
+    
+}
 
-    if (!code) return
+export const getServerSideProps: GetServerSideProps = async (context: any) => {
+  const code = context.query.code
 
-    fetch('/api/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ code })
-    })
-    setLoading(false);
-      
-  }, [router.query])
+  if (!code) return { props: {} }
 
-  if(loading){
-    return (<div>Loading...</div>)
-  } else {
-    return (<div>Logged in!</div>)
+  const res = await fetch('http://localhost:3000/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ code })
+  })
+  const jsonData = await res.json()
+
+  return {
+    props: {
+      accessToken: jsonData.access_token
+    }
   }
 }
 

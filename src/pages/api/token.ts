@@ -8,17 +8,19 @@ export default async function handler(
   const { code } = req.body
 
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_AUTH0_BASE_URL}/oauth/token`, {
-      client_id: `${process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID}`,
-      client_secret: `${process.env.NEXT_PUBLIC_AUTH0_CLIENT_SECRET}`,
-      redirect_uri: 'http://localhost:3000',
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_KOTLIN_IDP_BASE_URL}/oauth2/token`, {
+      client_id: `${process.env.NEXT_PUBLIC_KOTLIN_IDP_CLIENT_ID}`,
+      client_secret: `${process.env.NEXT_PUBLIC_KOTLIN_IDP_CLIENT_SECRET}`,
+      redirect_uri: 'http://localhost:3000/callback',
       grant_type: 'authorization_code',
-      code
-    })
+      code: code
+    },
+    {
+      headers: { 'content-type': 'application/x-www-form-urlencoded' }
+    }
+    )
 
-    const tokens = response.data
-    console.log(tokens)
-    res.status(200).json({ message: 'Token received' })
+    res.status(200).json(response.data)
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: 'An error occurred while trying to get the token' })
