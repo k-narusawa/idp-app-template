@@ -11,7 +11,7 @@ export default async function handler(
     const response = await axios.post(`${process.env.NEXT_PUBLIC_KOTLIN_IDP_BASE_URL}/oauth2/token`, {
       client_id: `${process.env.NEXT_PUBLIC_KOTLIN_IDP_CLIENT_ID}`,
       client_secret: `${process.env.NEXT_PUBLIC_KOTLIN_IDP_CLIENT_SECRET}`,
-      redirect_uri: 'http://localhost:3000/callback',
+      redirect_uri: 'http://localhost:3000/api/callback',
       grant_type: 'authorization_code',
       code: code
     },

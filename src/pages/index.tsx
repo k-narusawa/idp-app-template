@@ -6,7 +6,7 @@ const Home: NextPage = () => {
   const handleLogin = () => {
     const AUTH_SERVER = process.env.NEXT_PUBLIC_KOTLIN_IDP_BASE_URL
     const CLIENT_ID = process.env.NEXT_PUBLIC_KOTLIN_IDP_CLIENT_ID
-    const REDIRECT_URI = 'http://localhost:3000/callback'
+    const REDIRECT_URI = 'http://localhost:3000/api/callback'
   
     window.location.href = `${AUTH_SERVER}/oauth2/authorize?response_type=code&scope=openid&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`
   }
