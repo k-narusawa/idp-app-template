@@ -1,15 +1,13 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next/types";
-import { getSession } from "../../lib/session";
+import { withIronSessionApiRoute } from "iron-session/next";
+import { ironOptions } from "../../lib/config";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>
-) {
-  const { code } = req.query;
-  const session = await getSession(req, res);
+export default withIronSessionApiRoute(loginRoute, ironOptions);
 
+async function loginRoute(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
+    const { code } = req.query;
     const tokenResponse = await axios.post(
       `${process.env.NEXT_PUBLIC_KOTLIN_IDP_BASE_URL}/oauth2/token`,
       {
@@ -24,18 +22,16 @@ export default async function handler(
       }
     );
 
-    console.log(tokenResponse.data.access_token);
-    session.accessToken = tokenResponse.data.access_token;
-    await session.commit();
-    console.log(session);
-
+    req.session.token = {
+      access_token: tokenResponse.data.access_token,
+      id_token: tokenResponse.data.id_token,
+    };
+    await req.session.save();
     res.redirect(
       `http://localhost:3000/info?access_token=${tokenResponse.data.access_token}`
     );
   } catch (error) {
-    console.error(error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while trying to get the token" });
+    console.log(error);
+    res.status(500).send({ error: "Something went wrong" });
   }
 }
