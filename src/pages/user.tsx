@@ -18,7 +18,7 @@ type Props = {
   user: User;
 };
 
-const UserInfoPage = (props: Props) => {
+const UserPage = (props: Props) => {
   return (
     <>
       <h1>UserInfo</h1>
@@ -36,7 +36,14 @@ const UserInfoPage = (props: Props) => {
 
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req, res, query }) {
-    console.log(req.session.token.access_token);
+    if (req.session.token === undefined) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    }
     const user = await axios.get("http://localhost:8080/api/user", {
       headers: {
         Authorization: `Bearer ${req.session.token.access_token}`,
@@ -52,4 +59,4 @@ export const getServerSideProps = withIronSessionSsr(
   ironOptions
 );
 
-export default UserInfoPage;
+export default UserPage;

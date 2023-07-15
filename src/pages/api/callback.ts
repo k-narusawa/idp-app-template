@@ -27,9 +27,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse<any>) {
       id_token: tokenResponse.data.id_token,
     };
     await req.session.save();
-    res.redirect(
-      `http://localhost:3000/info?access_token=${tokenResponse.data.access_token}`
-    );
+    res.redirect(`http://localhost:3000/user`);
   } catch (error) {
     console.log(error);
     res.status(500).send({ error: "Something went wrong" });
